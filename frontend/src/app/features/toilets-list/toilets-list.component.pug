@@ -43,7 +43,7 @@
 
       ng-container(matColumnDef="actions")
         th(mat-header-cell, *matHeaderCellDef)
-        td(mat-cell, *matCellDef="let t")
+        td.fp-list__actions-cell(mat-cell, *matCellDef="let t")
           button(mat-icon-button, (click)="edit(t)", matTooltip="edit")
             mat-icon edit
           button(mat-icon-button, color="warn", (click)="remove(t)", matTooltip="delete")

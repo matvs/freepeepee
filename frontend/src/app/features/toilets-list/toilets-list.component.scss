@@ -28,8 +28,14 @@
   }
   &__table {
     width: 100%;
+    min-width: 640px;
     background: transparent !important;
     th, td { border-color: rgba(255,255,255,.05) !important; }
+  }
+  &__actions-cell {
+    width: 1px;
+    white-space: nowrap;
+    padding-right: 4px !important;
   }
   &__notes {
     max-width: 280px;
