@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" role="img" aria-label="freepeepee">
+  <defs>
+    <linearGradient id="lwood" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#5b4528"/>
+      <stop offset="50%" stop-color="#7a5d36"/>
+      <stop offset="100%" stop-color="#4a3a25"/>
+    </linearGradient>
+  </defs>
+
+  <!-- mark : wooden toi-toi with duck head poking through the heart hole -->
+  <g transform="translate(20,18)">
+    <polygon points="0,10 140,10 130,0 10,0" fill="#3a2c19"/>
+    <rect x="0" y="10" width="140" height="160" fill="url(#lwood)" stroke="#2c2014" stroke-width="3"/>
+    <rect x="18" y="26" width="104" height="130" fill="#5b4528" stroke="#2c2014" stroke-width="2"/>
+    <path d="M70 60 C 56 48, 36 48, 36 70 C 36 92, 70 120, 70 120 C 70 120, 104 92, 104 70 C 104 48, 84 48, 70 60 Z" fill="#0a0807"/>
+    <!-- duck peeking -->
+    <g transform="translate(58,78)">
+      <circle cx="14" cy="14" r="18" fill="#fcd62c"/>
+      <circle cx="20" cy="10" r="2.6" fill="#1a1410"/>
+      <path d="M30 14 L 44 17 L 30 21 Z" fill="#e08020"/>
+    </g>
+    <circle cx="110" cy="92" r="3" fill="#1a1410"/>
+  </g>
+
+  <!-- wordmark, sized to fit -->
+  <g transform="translate(180,118)" font-family="Fraunces, Georgia, serif" font-weight="900" font-size="68" font-variation-settings="'opsz' 144">
+    <text x="0" y="0" fill="#fcd62c" letter-spacing="-2">free</text>
+    <text x="138" y="0" fill="#f2e8d2" letter-spacing="-2">peepee</text>
+  </g>
+  <g transform="translate(182,148)" font-family="IBM Plex Mono, Menlo, monospace" font-size="13" fill="#9e8c66" letter-spacing="5">
+    <text>FIND A LOO . FAST .</text>
+  </g>
+</svg>

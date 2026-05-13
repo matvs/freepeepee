@@ -1,0 +1,15 @@
+.fp-shell
+  mat-toolbar.fp-shell__bar(color="primary")
+    .fp-shell__brand
+      span.fp-shell__logo-mark 🚽
+      span.fp-shell__logo-text freepeepee
+    .fp-shell__spacer
+    mat-button-toggle-group.fp-shell__toggle([value]="currentRoute", hideSingleSelectionIndicator)
+      mat-button-toggle(value="list", routerLink="/list", matTooltip="list view")
+        mat-icon list
+      mat-button-toggle(value="map", routerLink="/map", matTooltip="map view")
+        mat-icon map
+    button(mat-icon-button, (click)="logout()", matTooltip="sign out", aria-label="sign out")
+      mat-icon logout
+  main.fp-shell__main
+    router-outlet

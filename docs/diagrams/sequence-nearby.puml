@@ -1,0 +1,28 @@
+@startuml sequence-nearby
+title freepeepee : "find close to me"
+
+actor matvs
+participant "ToiletsMapComponent" as UI
+participant "Browser\nGeolocation API" as Geo
+participant "ToiletService\n(Angular)" as Cli
+participant "JwtAuthFilter" as Filter
+participant "ToiletController" as Ctrl
+participant "ToiletService\n(Kotlin)" as Svc
+database "Postgres + PostGIS" as DB
+
+matvs -> UI : click "find freepeepee close to me"
+UI -> Geo : getCurrentPosition()
+Geo --> UI : (lat, lon)
+UI -> UI : map.flyTo([lat,lon], 15)
+UI -> Cli : nearby(lat, lon, 2000)
+Cli -> Filter : GET /api/toilets/nearby?lat&lon&radius\nAuthorization: Bearer <jwt>
+Filter -> Filter : verify JWT, set SecurityContext
+Filter -> Ctrl : forward
+Ctrl -> Svc : nearby(lat, lon, 2000)
+Svc -> DB : SELECT * FROM toilet\n WHERE ST_DWithin(location, $point::geography, 2000)\n ORDER BY location <-> $point
+DB --> Svc : rows (sorted by distance)
+Svc --> Ctrl : List<Toilet>
+Ctrl --> Cli : 200 List<ToiletDto>
+Cli --> UI : observable next
+UI -> UI : render markers, popup on hover
+@enduml

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect x="10" y="6" width="44" height="52" rx="2" fill="#7a5d36" stroke="#2c2014" stroke-width="2"/>
+  <polygon points="6,8 58,8 52,2 12,2" fill="#3a2c19"/>
+  <rect x="18" y="14" width="28" height="38" fill="#5b4528"/>
+  <!-- heart hole -->
+  <path d="M32 26 C 28 22, 22 22, 22 28 C 22 34, 32 42, 32 42 C 32 42, 42 34, 42 28 C 42 22, 36 22, 32 26 Z" fill="#1a1410"/>
+  <circle cx="42" cy="33" r="1.8" fill="#1a1410"/>
+</svg>

@@ -1,0 +1,10 @@
+.fp-map
+  .fp-map__bar
+    .fp-map__count
+      mat-icon place
+      span {{ count() }} freepeepees on map
+    .fp-map__actions
+      button(mat-flat-button, color="accent", (click)="findNearMe()", matTooltip="grant location to find toilets within 2 km")
+        mat-icon my_location
+        | find freepeepee close to me
+  .fp-map__canvas(#mapEl)

@@ -1,0 +1,94 @@
+.fp-login(:class="{ ['stage--' + stage()]: true }")
+  .fp-login__scene
+
+    //- The toi-toi (porta-potty)
+    button.fp-toitoi(type="button", (click)="openDoor()", [attr.aria-label]="'open the toi-toi'", [disabled]="stage() !== 'closed'")
+      svg.fp-toitoi__svg(viewBox="0 0 320 460", xmlns="http://www.w3.org/2000/svg", aria-hidden="true")
+        defs
+          //- weathered wood gradient
+          linearGradient#wood(x1="0", y1="0", x2="1", y2="0")
+            stop(offset="0%", stop-color="#5b4528")
+            stop(offset="50%", stop-color="#7a5d36")
+            stop(offset="100%", stop-color="#4a3a25")
+          linearGradient#roof(x1="0", y1="0", x2="0", y2="1")
+            stop(offset="0%", stop-color="#3a2c19")
+            stop(offset="100%", stop-color="#5b4528")
+          pattern#planks(width="320", height="40", patternUnits="userSpaceOnUse")
+            rect(width="320", height="40", fill="url(#wood)")
+            line(x1="0", y1="40", x2="320", y2="40", stroke="#2c2014", stroke-width="2")
+          filter#grain
+            feTurbulence(type="fractalNoise", baseFrequency="0.9", numOctaves="2")
+            feColorMatrix(values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .25 0")
+            feComposite(in2="SourceGraphic", operator="in")
+
+        //- shadow on the ground
+        ellipse(cx="160", cy="450", rx="130", ry="10", fill="rgba(0,0,0,.5)")
+
+        //- roof
+        polygon(points="20,80 300,80 280,40 40,40", fill="url(#roof)")
+        rect(x="30", y="78", width="260", height="6", fill="#2c2014")
+
+        //- body (planks)
+        rect.fp-toitoi__body(x="30", y="80", width="260", height="350", fill="url(#planks)")
+        rect(x="30", y="80", width="260", height="350", fill="url(#grain)", opacity=".6")
+
+        //- door frame
+        rect(x="60", y="100", width="200", height="310", fill="none", stroke="#2c2014", stroke-width="3")
+
+        //- the door (this is the part that swings open)
+        g.fp-toitoi__door
+          rect(x="60", y="100", width="200", height="310", fill="url(#planks)")
+          rect(x="60", y="100", width="200", height="310", fill="url(#grain)", opacity=".5")
+          //- heart-shaped vent hole, classic outhouse motif
+          path.fp-toitoi__heart(d="M160 200 C 140 175, 100 175, 100 210 C 100 245, 160 290, 160 290 C 160 290, 220 245, 220 210 C 220 175, 180 175, 160 200 Z", fill="#0a0807")
+          //- handle
+          circle(cx="240", cy="255", r="4", fill="#1a1410")
+          //- hinges
+          rect(x="56", y="120", width="6", height="14", fill="#1a1410")
+          rect(x="56", y="380", width="6", height="14", fill="#1a1410")
+
+        //- "interior" peek - revealed once door swings
+        g.fp-toitoi__interior
+          rect(x="60", y="100", width="200", height="310", fill="#0a0807")
+          //- duck silhouette sitting on the throne, holding a newspaper
+          g(transform="translate(75,200)")
+            //- newspaper (held)
+            rect(x="-10", y="20", width="170", height="80", fill="#f0e6cf", stroke="#3a2c19", stroke-width="2")
+            line(x1="0", y1="35", x2="150", y2="35", stroke="#3a2c19", stroke-width="1")
+            line(x1="0", y1="45", x2="150", y2="45", stroke="#3a2c19", stroke-width="1")
+            line(x1="0", y1="55", x2="120", y2="55", stroke="#3a2c19", stroke-width="1")
+            line(x1="0", y1="65", x2="140", y2="65", stroke="#3a2c19", stroke-width="1")
+            line(x1="0", y1="75", x2="130", y2="75", stroke="#3a2c19", stroke-width="1")
+            line(x1="0", y1="85", x2="100", y2="85", stroke="#3a2c19", stroke-width="1")
+            //- duck body
+            ellipse(cx="85", cy="-20", rx="55", ry="40", fill="#fcd62c")
+            //- head
+            circle(cx="135", cy="-50", r="28", fill="#fcd62c")
+            //- eye
+            circle(cx="145", cy="-58", r="3.5", fill="#1a1410")
+            //- beak
+            path(d="M158 -48 L 178 -45 L 158 -38 Z", fill="#e08020")
+
+      //- the "click me" hint, only when closed
+      .fp-toitoi__hint(*ngIf="stage() === 'closed'") tap the door
+
+    //- The newspaper rises from the toilet, becoming the login form
+    .fp-newspaper(:class="{ shake: shake() }")
+      header.fp-newspaper__masthead
+        .fp-newspaper__title freepeepee
+        .fp-newspaper__sub Vol. I  ·  No. 1  ·  est. today  ·  one swiss franc
+      hr.fp-newspaper__rule
+      h2.fp-newspaper__headline The duck handed you the news. Sign in.
+      form.fp-newspaper__form([formGroup]="form", (ngSubmit)="submit()", autocomplete="on")
+        mat-form-field(appearance="outline", subscriptSizing="dynamic")
+          mat-label username
+          input(matInput, formControlName="username", autocomplete="username")
+        mat-form-field(appearance="outline", subscriptSizing="dynamic")
+          mat-label password
+          input(matInput, type="password", formControlName="password", autocomplete="current-password")
+        mat-checkbox(formControlName="rememberMe", color="primary") will you remember me? i will remember me
+        .fp-newspaper__error(*ngIf="errorMsg()") {{ errorMsg() }}
+        button.fp-newspaper__submit(mat-flat-button, color="primary", type="submit", [disabled]="form.invalid || submitting()")
+          ng-container(*ngIf="!submitting()") sign in
+          mat-spinner(*ngIf="submitting()", diameter="20")
+      footer.fp-newspaper__foot — handed to you by a duck —

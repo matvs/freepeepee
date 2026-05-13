@@ -1,0 +1,38 @@
+@startuml usecase
+left to right direction
+skinparam packageStyle rectangle
+
+actor "User\n(matvs)" as U
+actor "Browser\nGeolocation" as G
+
+rectangle freepeepee {
+  usecase "Sign in"               as UC1
+  usecase "Sign out"               as UC2
+  usecase "View toilets as list"   as UC3
+  usecase "View toilets on map"    as UC4
+  usecase "Toggle view"            as UC5
+  usecase "Search toilets"         as UC6
+  usecase "Find toilets near me"   as UC7
+  usecase "Create toilet"          as UC8
+  usecase "Edit toilet"            as UC9
+  usecase "Delete toilet"          as UC10
+  usecase "View audit history"     as UC11 << admin only >>
+}
+
+U --> UC1
+U --> UC2
+U --> UC3
+U --> UC4
+U --> UC5
+U --> UC6
+U --> UC7
+U --> UC8
+U --> UC9
+U --> UC10
+U --> UC11
+
+UC7 ..> G : <<uses>> coords
+UC8 ..> UC1 : <<include>>
+UC9 ..> UC1 : <<include>>
+UC10 ..> UC1 : <<include>>
+@enduml

@@ -1,0 +1,40 @@
+@startuml activity-edit
+title freepeepee : edit toilet activity
+
+start
+:user opens edit dialog;
+:form pre-fills with current values + version;
+:user changes fields;
+if (form valid?) then (no)
+  :show inline validation;
+  stop
+else (yes)
+endif
+:POST PUT /api/toilets/{id} (incl. version);
+:filter verifies JWT;
+if (entity exists?) then (no)
+  :404 not found;
+  stop
+else (yes)
+endif
+if (server.version == request.version?) then (no)
+  :409 version conflict;
+  :client : show "reload and retry";
+  stop
+else (yes)
+endif
+
+:snapshot BEFORE (in-memory);
+:apply changes;
+:JPA save -> Postgres;
+:snapshot AFTER (in-memory);
+:diff(BEFORE, AFTER) -> changed fields;
+fork
+  :persist AuditEntry per changed field
+  (fieldName, oldValue, newValue,
+   actor, ip, agent, requestId);
+fork again
+  :return 200 with updated DTO;
+end fork
+stop
+@enduml

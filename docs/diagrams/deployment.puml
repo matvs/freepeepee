@@ -1,0 +1,35 @@
+@startuml deployment
+title freepeepee deployment on matvs.dev droplet
+
+node "matvs.dev droplet" {
+  node "Host nginx" as HostNginx {
+    artifact "TLS via Lets Encrypt" as TLS
+    artifact "reverse proxy to 127.0.0.1:8081" as RP
+  }
+
+  node "Docker engine" {
+    node "Compose project" {
+      node "edge\nnginx:1.27-alpine" as Edge
+      node "web\nfreepeepee/web" as Web {
+        artifact "Angular SPA\nserved by tiny nginx" as SPA
+      }
+      node "api\nfreepeepee/api" as Api {
+        artifact "Spring Boot 3 fat jar\non JRE 21 alpine" as Jar
+      }
+      node "db\npostgis:16-3.4" as Db {
+        artifact "named volume\npgdata" as Vol
+      }
+    }
+  }
+}
+
+cloud "Browser or PWA" as Dev
+cloud "tile.openstreetmap.org" as OSM
+
+Dev -down-> HostNginx : HTTPS 443
+HostNginx -down-> Edge : :8081
+Edge -down-> Web
+Edge -down-> Api
+Api -down-> Db
+Dev .right.> OSM : map tiles
+@enduml

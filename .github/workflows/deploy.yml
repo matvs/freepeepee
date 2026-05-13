@@ -1,0 +1,26 @@
+name: deploy-prod
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: image tag to deploy (e.g. v0.1.0)
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: SSH deploy via known host
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd /opt/freepeepee
+            export VERSION=${{ inputs.version }}
+            docker compose pull
+            docker compose up -d
+            docker compose ps

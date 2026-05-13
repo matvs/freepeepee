@@ -1,0 +1,87 @@
+@startuml class
+skinparam classAttributeIconSize 0
+hide circle
+
+package "dev.matvs.freepeepee.domain" <<Folder>> {
+  enum ToiletType {
+    MCDONALDS
+    GAS_STATION
+    PARK
+    CAFE
+    PUBLIC
+    OTHER
+  }
+  enum Role {
+    USER
+    ADMIN
+  }
+  enum AuditOperation {
+    CREATE
+    UPDATE
+    DELETE
+    LOGIN
+    LOGIN_FAIL
+  }
+
+  class Toilet {
+    +id : UUID
+    +name : String
+    +address : String
+    +location : Point
+    +pinCode : String?
+    +isWorking : Boolean
+    +toiletType : ToiletType
+    +notes : String?
+    +createdAt : OffsetDateTime
+    +updatedAt : OffsetDateTime
+    +createdBy : UUID
+    +version : Long
+  }
+
+  class AppUser {
+    +id : UUID
+    +username : String
+    +passwordHash : String
+    +role : Role
+    +createdAt : OffsetDateTime
+    +isEnabled : Boolean
+  }
+
+  class AuditEntry {
+    +id : Long
+    +occurredAt : OffsetDateTime
+    +actorId : UUID?
+    +actorName : String
+    +actorIp : String?
+    +actorAgent : String?
+    +entityType : String
+    +entityId : UUID?
+    +operation : AuditOperation
+    +fieldName : String?
+    +oldValue : String?
+    +newValue : String?
+    +requestId : UUID?
+  }
+}
+
+package "dev.matvs.freepeepee.service" <<Folder>> {
+  class ToiletService
+  class AuthService
+  class AuditService
+}
+
+package "dev.matvs.freepeepee.web" <<Folder>> {
+  class ToiletController
+  class AuthController
+}
+
+Toilet o-- ToiletType
+AppUser o-- Role
+AuditEntry o-- AuditOperation
+ToiletService --> Toilet : <<manages>>
+ToiletService --> AuditService : records changes
+AuthService --> AppUser
+AuthService --> AuditService : logs auth
+ToiletController --> ToiletService
+AuthController --> AuthService
+@enduml

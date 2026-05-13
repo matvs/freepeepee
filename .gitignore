@@ -1,0 +1,22 @@
+# envs / secrets
+.env
+.env.*
+!.env.example
+
+# node
+node_modules/
+dist/
+coverage/
+.angular/
+*.log
+
+# gradle / jvm
+.gradle/
+build/
+out/
+.idea/
+*.iml
+
+# os
+.DS_Store
+Thumbs.db

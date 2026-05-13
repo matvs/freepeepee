@@ -1,0 +1,42 @@
+@startuml component
+title freepeepee : component view
+
+skinparam component {
+  BorderColor #4a3a25
+  BackgroundColor #f2e8d2
+  FontColor #1a1815
+}
+
+actor User
+
+node "Browser" {
+  [Angular SPA\n(Material + Leaflet)] as SPA
+  [Service Worker\n(ngsw)] as SW
+}
+
+node "Edge nginx\n(127.0.0.1:8081)" as Edge
+node "Host nginx\n(TLS termination)" as Host
+
+node "API container" {
+  [Spring Boot 3 / Kotlin] as API
+  [Spring Security\n+ JWT filter] as Sec
+  [Flyway] as Fly
+}
+
+database "PostgreSQL 16\n+ PostGIS 3.4" as DB
+
+node "OpenStreetMap" as OSM
+
+User --> Host : HTTPS
+Host --> Edge : HTTP, X-Forwarded-*
+Edge --> SPA : / (static)
+SPA <-- SW : offline cache
+Edge --> API : /api/**
+SPA --> OSM : tile.openstreetmap.org/{z}/{x}/{y}.png
+SPA --> API : /api/auth/login, /api/toilets/**
+
+API --> Sec
+API --> Fly : migrate on startup
+Sec --> DB
+API --> DB : JPA + Hibernate Spatial
+@enduml

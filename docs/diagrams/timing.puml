@@ -1,0 +1,55 @@
+@startuml timing
+title freepeepee : login + first nearby query (compressed timeline)
+scale 50 as 60 pixels
+
+robust "Browser"     as B
+robust "Edge nginx"  as E
+robust "Spring Boot" as A
+robust "PostGIS"     as D
+
+@B
+0 is Idle
+1 is "tap door"
+2 is "anim"
+8 is "form ready"
+9 is "submit"
+13 is "got token"
+14 is "GET /toilets"
+17 is "got list"
+18 is "click near me"
+19 is "geolocation"
+26 is "got coords"
+27 is "GET /nearby"
+30 is "render markers"
+33 is Idle
+
+@E
+0 is Idle
+9 is Routing
+13 is Idle
+14 is Routing
+17 is Idle
+27 is Routing
+30 is Idle
+
+@A
+0 is Idle
+9 is Auth
+11 is "BCrypt + JWT + audit"
+13 is Idle
+14 is List
+17 is Idle
+27 is Nearby
+30 is Idle
+
+@D
+0 is Idle
+10 is "SELECT user"
+12 is "INSERT audit"
+13 is Idle
+14 is "SELECT all"
+17 is Idle
+27 is "ST_DWithin + KNN"
+30 is Idle
+
+@enduml

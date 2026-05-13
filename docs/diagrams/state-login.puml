@@ -1,0 +1,24 @@
+@startuml state-login
+title freepeepee : login UI states
+
+[*] --> Closed : route /login
+
+state Closed
+state Opening
+state Revealing
+state Open
+state Submitting
+state Failed
+state Authenticated
+
+Closed --> Opening      : click door
+Opening --> Revealing   : after 950 ms\n(door fully swung)
+Revealing --> Open      : after 750 ms\n(newspaper rises)
+
+Open --> Submitting     : submit() with valid form
+Submitting --> Authenticated : 200 OK\n(navigate /list)
+Submitting --> Failed        : 401 / network error
+Failed --> Open              : after 600 ms (paper shake stops)
+
+Authenticated --> [*]
+@enduml

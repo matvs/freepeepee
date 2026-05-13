@@ -1,0 +1,36 @@
+@startuml sequence-login
+title freepeepee : login sequence
+
+actor matvs
+participant "LoginComponent\n(Angular)" as UI
+participant "AuthService\n(Angular)" as Cli
+participant "AuthController" as Ctrl
+participant "AuthService\n(Kotlin)" as Svc
+participant "PasswordEncoder\n(BCrypt cost 12)" as Bcrypt
+participant "UserRepository" as Repo
+participant "JwtService" as Jwt
+participant "AuditService" as Audit
+database "Postgres + PostGIS" as DB
+
+matvs -> UI : tap toi-toi door
+UI -> UI : stage = "opening" -> "revealing" -> "open"
+matvs -> UI : submit(matvs, lap00p00, rememberMe=true)
+UI -> Cli : login(...)
+Cli -> Ctrl : POST /api/auth/login
+Ctrl -> Svc : login(...)
+Svc -> Repo : findByUsername("matvs")
+Repo -> DB : SELECT * FROM app_user WHERE username=?
+DB --> Repo : row
+Repo --> Svc : AppUser
+Svc -> Bcrypt : matches(raw, hash)
+Bcrypt --> Svc : true
+Svc -> Audit : recordLogin(matvs, success=true)
+Audit -> DB : INSERT INTO audit_entry ...
+Svc -> Jwt : issue(matvs, ADMIN, rememberMe=true)
+Jwt --> Svc : TokenPair(access, refresh, exp)
+Svc --> Ctrl : Success(tokens)
+Ctrl --> Cli : 200 TokenResponse
+Cli -> Cli : localStorage.setItem(fp.access, ...)
+Cli --> UI : ok
+UI -> UI : router.navigate(['/list'])
+@enduml

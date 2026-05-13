@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>freepeepee – login preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=IBM+Plex+Mono:wght@400;500;700&display=swap">
+<style>
+  :root {
+    --fp-paper:#f2e8d2; --fp-ink:#1a1815; --fp-duck:#fcd62c; --fp-red:#c43c2c;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; font-family: 'Fraunces', serif; }
+  body {
+    background:
+      radial-gradient(ellipse at 50% 100%, rgba(0,0,0,.7), transparent 60%),
+      radial-gradient(ellipse at 50% 30%, #2b4a2a 0%, #1a2a18 60%, #0a120a 100%);
+    overflow: hidden;
+    color: var(--fp-paper);
+  }
+
+  .fp-login { position: relative; width: 100%; height: 100dvh; display: grid; place-items: center; padding: 24px 16px; }
+  .fp-login::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 50% 0%, rgba(252,214,44,.06), transparent 40%); pointer-events:none; }
+  .fp-login__scene { position: relative; width: min(560px, 100%); aspect-ratio: 320/520; display: grid; place-items: center; }
+
+  .fp-toitoi { position: relative; width: 100%; height: 100%; background: none; border: none; padding: 0; cursor: pointer; filter: drop-shadow(0 30px 30px rgba(0,0,0,.6)); }
+  .fp-toitoi:disabled { cursor: default; }
+  .fp-toitoi__svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  .fp-toitoi__door { transform-origin: 60px 255px; transition: transform .9s cubic-bezier(.6,-.05,.2,1.1); transform-style: preserve-3d; }
+  .fp-toitoi__interior { opacity: 0; transition: opacity .4s ease .3s; }
+  .fp-toitoi__heart { transform-origin: 160px 230px; animation: heartbeat 1.8s ease-in-out infinite; }
+  .fp-toitoi__hint { position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%); font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: rgba(242,232,210,.6); animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes heartbeat { 0%, 70%, 100% { transform: scale(1); } 35% { transform: scale(1.06); } 50% { transform: scale(.98); } }
+  @keyframes pulse { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+
+  .fp-newspaper {
+    position: absolute; left: 50%; top: 50%; width: min(420px, 92vw); max-height: 88dvh; overflow-y: auto;
+    transform: translate(-50%, calc(-50% + 60vh)) rotate(-2deg);
+    opacity: 0;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,.015) 0 1px, transparent 1px 4px),
+      #f2e8d2;
+    color: #1a1815;
+    padding: 24px 28px 20px;
+    border-radius: 2px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.1), inset 0 0 60px rgba(120,90,40,.18);
+    transition: transform 1s cubic-bezier(.2,.7,.2,1), opacity .6s ease .2s;
+    pointer-events: none;
+  }
+  .fp-newspaper__title { font-weight: 900; font-size: clamp(34px, 7vw, 52px); line-height: 1; letter-spacing: -.02em; font-variation-settings: 'opsz' 144; text-align: center; }
+  .fp-newspaper__sub { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; margin-top: 6px; color: #4a3a25; text-align: center; }
+  .fp-newspaper__rule { border: 0; border-top: 3px double #1a1815; margin: 14px 0 18px; }
+  .fp-newspaper__headline { font-size: clamp(18px, 3.6vw, 22px); font-weight: 700; margin: 0 0 18px; line-height: 1.15; text-align: center; }
+  .fp-newspaper__form { display: grid; gap: 12px; }
+  .fp-newspaper__form label { display: grid; gap: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #4a3a25; }
+  .fp-newspaper__form input[type=text], .fp-newspaper__form input[type=password] {
+    width: 100%; padding: 10px 12px; background: rgba(255,255,255,.6); border: 1px solid #4a3a25; font-family: 'Fraunces', serif; font-size: 16px; color: #1a1815;
+  }
+  .fp-newspaper__check { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .fp-newspaper__submit { margin-top: 6px; width: 100%; min-height: 44px; background: #1a1815; color: #fcd62c; border: none; font-family: 'IBM Plex Mono', monospace; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+  .fp-newspaper__foot { margin-top: 14px; text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .15em; color: #4a3a25; }
+
+  .stage--opening .fp-toitoi__door, .stage--revealing .fp-toitoi__door, .stage--open .fp-toitoi__door {
+    transform: perspective(1200px) rotateY(-105deg);
+  }
+  .stage--revealing .fp-toitoi__interior, .stage--open .fp-toitoi__interior { opacity: 1; }
+  .stage--revealing .fp-newspaper, .stage--open .fp-newspaper {
+    transform: translate(-50%, -50%) rotate(-2deg); opacity: 1; pointer-events: auto;
+  }
+</style>
+</head>
+<body>
+<div class="fp-login stage--closed" id="login">
+  <div class="fp-login__scene">
+
+    <button class="fp-toitoi" type="button" id="door" aria-label="open the toi-toi">
+      <svg class="fp-toitoi__svg" viewBox="0 0 320 460" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="wood" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#5b4528"/><stop offset="50%" stop-color="#7a5d36"/><stop offset="100%" stop-color="#4a3a25"/>
+          </linearGradient>
+          <linearGradient id="roof" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3a2c19"/><stop offset="100%" stop-color="#5b4528"/>
+          </linearGradient>
+          <pattern id="planks" width="320" height="40" patternUnits="userSpaceOnUse">
+            <rect width="320" height="40" fill="url(#wood)"/>
+            <line x1="0" y1="40" x2="320" y2="40" stroke="#2c2014" stroke-width="2"/>
+          </pattern>
+          <filter id="grain">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/>
+            <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .25 0"/>
+            <feComposite in2="SourceGraphic" operator="in"/>
+          </filter>
+        </defs>
+        <ellipse cx="160" cy="450" rx="130" ry="10" fill="rgba(0,0,0,.5)"/>
+        <polygon points="20,80 300,80 280,40 40,40" fill="url(#roof)"/>
+        <rect x="30" y="78" width="260" height="6" fill="#2c2014"/>
+        <rect x="30" y="80" width="260" height="350" fill="url(#planks)"/>
+        <rect x="30" y="80" width="260" height="350" fill="url(#grain)" opacity=".6"/>
+        <rect x="60" y="100" width="200" height="310" fill="none" stroke="#2c2014" stroke-width="3"/>
+
+        <g class="fp-toitoi__door">
+          <rect x="60" y="100" width="200" height="310" fill="url(#planks)"/>
+          <rect x="60" y="100" width="200" height="310" fill="url(#grain)" opacity=".5"/>
+          <path class="fp-toitoi__heart" d="M160 200 C 140 175, 100 175, 100 210 C 100 245, 160 290, 160 290 C 160 290, 220 245, 220 210 C 220 175, 180 175, 160 200 Z" fill="#0a0807"/>
+          <circle cx="240" cy="255" r="4" fill="#1a1410"/>
+          <rect x="56" y="120" width="6" height="14" fill="#1a1410"/>
+          <rect x="56" y="380" width="6" height="14" fill="#1a1410"/>
+        </g>
+
+        <g class="fp-toitoi__interior">
+          <rect x="60" y="100" width="200" height="310" fill="#0a0807"/>
+          <g transform="translate(75,200)">
+            <rect x="-10" y="20" width="170" height="80" fill="#f0e6cf" stroke="#3a2c19" stroke-width="2"/>
+            <line x1="0" y1="35" x2="150" y2="35" stroke="#3a2c19" stroke-width="1"/>
+            <line x1="0" y1="45" x2="150" y2="45" stroke="#3a2c19" stroke-width="1"/>
+            <line x1="0" y1="55" x2="120" y2="55" stroke="#3a2c19" stroke-width="1"/>
+            <line x1="0" y1="65" x2="140" y2="65" stroke="#3a2c19" stroke-width="1"/>
+            <line x1="0" y1="75" x2="130" y2="75" stroke="#3a2c19" stroke-width="1"/>
+            <line x1="0" y1="85" x2="100" y2="85" stroke="#3a2c19" stroke-width="1"/>
+            <ellipse cx="85" cy="-20" rx="55" ry="40" fill="#fcd62c"/>
+            <circle cx="135" cy="-50" r="28" fill="#fcd62c"/>
+            <circle cx="145" cy="-58" r="3.5" fill="#1a1410"/>
+            <path d="M158 -48 L 178 -45 L 158 -38 Z" fill="#e08020"/>
+          </g>
+        </g>
+      </svg>
+      <div class="fp-toitoi__hint" id="hint">tap the door</div>
+    </button>
+
+    <div class="fp-newspaper">
+      <div class="fp-newspaper__title">freepeepee</div>
+      <div class="fp-newspaper__sub">Vol. I &nbsp;·&nbsp; No. 1 &nbsp;·&nbsp; est. today &nbsp;·&nbsp; one swiss franc</div>
+      <hr class="fp-newspaper__rule"/>
+      <h2 class="fp-newspaper__headline">The duck handed you the news. Sign in.</h2>
+      <form class="fp-newspaper__form" onsubmit="event.preventDefault(); alert('Hook this up to /api/auth/login in the real app.')">
+        <label>username<input type="text" name="username" value="matvs" autocomplete="username"/></label>
+        <label>password<input type="password" name="password" value="lap00p00" autocomplete="current-password"/></label>
+        <label class="fp-newspaper__check"><input type="checkbox" name="rememberMe" checked/> will you remember me? i will remember me</label>
+        <button class="fp-newspaper__submit" type="submit">sign in</button>
+      </form>
+      <div class="fp-newspaper__foot">— handed to you by a duck —</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.getElementById('door').addEventListener('click', () => {
+    const root = document.getElementById('login');
+    if (!root.classList.contains('stage--closed')) return;
+    root.classList.remove('stage--closed');
+    root.classList.add('stage--opening');
+    document.getElementById('hint').style.display = 'none';
+    setTimeout(() => { root.classList.remove('stage--opening'); root.classList.add('stage--revealing'); }, 950);
+    setTimeout(() => { root.classList.remove('stage--revealing'); root.classList.add('stage--open'); }, 1700);
+  });
+</script>
+</body>
+</html>

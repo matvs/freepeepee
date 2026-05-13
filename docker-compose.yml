@@ -1,0 +1,56 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: freepeepee
+      POSTGRES_USER: ${DB_USER:-freepeepee}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?required}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DB_USER:-freepeepee}", "-d", "freepeepee"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    networks: [backend]
+
+  api:
+    build: ./backend
+    image: freepeepee/api:${VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/freepeepee
+      DB_USER: ${DB_USER:-freepeepee}
+      DB_PASSWORD: ${DB_PASSWORD:?required}
+      JWT_SECRET: ${JWT_SECRET:?required - at least 32 bytes}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://freepeepee.matvs.dev}
+      SERVER_PORT: 8080
+    networks: [backend, web]
+
+  web:
+    build:
+      context: ./frontend
+    image: freepeepee/web:${VERSION:-latest}
+    restart: unless-stopped
+    depends_on: [api]
+    networks: [web]
+
+  edge:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8081:80"   # bound to localhost only - your host nginx reverse proxies into this
+    volumes:
+      - ./nginx/freepeepee.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on: [api, web]
+    networks: [web]
+
+volumes:
+  pgdata:
+
+networks:
+  backend:
+  web:

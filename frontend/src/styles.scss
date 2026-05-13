@@ -1,0 +1,79 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+// freepeepee palette : weathered wood + duck yellow + grass green
+$fp-primary: mat.m2-define-palette((
+  50:  #f4ede1,
+  100: #e3d2b3,
+  200: #d0b582,
+  300: #bc9750,
+  400: #ad812b,
+  500: #9e6c0a,
+  600: #91630a,
+  700: #815808,
+  800: #714d07,
+  900: #543804,
+  contrast: (50:#000,100:#000,200:#000,300:#000,400:#fff,500:#fff,600:#fff,700:#fff,800:#fff,900:#fff)
+), 500);
+
+$fp-accent: mat.m2-define-palette((
+  50:  #fffbe6,
+  100: #fef3c0,
+  200: #feeb96,
+  300: #fee36b,
+  400: #fddc4a,
+  500: #fcd62c,
+  600: #f0c427,
+  700: #e0ad21,
+  800: #d0961c,
+  900: #b27013,
+  contrast: (50:#000,100:#000,200:#000,300:#000,400:#000,500:#000,600:#000,700:#000,800:#000,900:#fff)
+), 500);
+
+$fp-warn: mat.m2-define-palette(mat.$m2-red-palette);
+
+$fp-theme: mat.m2-define-dark-theme((
+  color: (primary: $fp-primary, accent: $fp-accent, warn: $fp-warn),
+  typography: mat.m2-define-typography-config(
+    $font-family: '"Fraunces", "IBM Plex Mono", serif'
+  ),
+  density: 0
+));
+
+@include mat.all-component-themes($fp-theme);
+
+:root {
+  --fp-bg: #1a1815;
+  --fp-bg-soft: #24211b;
+  --fp-wood-dark: #4a3a25;
+  --fp-wood: #6b522e;
+  --fp-wood-light: #8a6d44;
+  --fp-grass: #2b4a2a;
+  --fp-paper: #f2e8d2;
+  --fp-ink: #1a1815;
+  --fp-duck: #fcd62c;
+  --fp-red: #c43c2c;
+  --fp-green: #4f8a3a;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--fp-bg);
+  color: var(--fp-paper);
+  font-family: 'Fraunces', serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.fp-mono { font-family: 'IBM Plex Mono', monospace; }
+
+// Status dots used by list view
+.fp-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.05), 0 0 12px currentColor;
+}
+.fp-dot--ok  { background: var(--fp-green); color: var(--fp-green); }
+.fp-dot--bad { background: var(--fp-red);   color: var(--fp-red);   }

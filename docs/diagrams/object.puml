@@ -1,0 +1,46 @@
+@startuml object
+title freepeepee : runtime snapshot, matvs editing the McDonald's entry
+
+object "matvs : AppUser" as U {
+  id = a5e1...
+  username = "matvs"
+  role = ADMIN
+  isEnabled = true
+}
+
+object "mcd : Toilet" as T1 {
+  id = 9b2c...
+  name = "McDonald's Bahnhofstrasse"
+  address = "Bahnhofstrasse 75, 8001 Zurich"
+  location = Point(8.5402, 47.3760)
+  pinCode = null
+  isWorking = true
+  toiletType = MCDONALDS
+  version = 0
+}
+
+object "edit-req : AuditEntry" as A1 {
+  id = 17
+  operation = UPDATE
+  entityType = "Toilet"
+  fieldName = "isWorking"
+  oldValue = "true"
+  newValue = "false"
+  actorName = "matvs"
+  actorIp = "::1"
+}
+
+object "create-req : AuditEntry" as A2 {
+  id = 1
+  operation = CREATE
+  entityType = "Toilet"
+  fieldName = null
+  newValue = "{...snapshot...}"
+  actorName = "matvs"
+}
+
+A1 --> T1 : entityId
+A2 --> T1 : entityId
+A1 --> U : actorId
+A2 --> U : actorId
+@enduml

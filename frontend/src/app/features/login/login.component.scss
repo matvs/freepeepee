@@ -1,0 +1,225 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(0,0,0,.7), transparent 60%),
+    radial-gradient(ellipse at 50% 30%, #2b4a2a 0%, #1a2a18 60%, #0a120a 100%);
+  overflow: hidden;
+}
+
+.fp-login {
+  position: relative;
+  width: 100%;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  box-sizing: border-box;
+
+  // a moonlight beam from above
+  &::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(252,214,44,.06), transparent 40%);
+    pointer-events: none;
+  }
+
+  &__scene {
+    position: relative;
+    width: min(560px, 100%);
+    aspect-ratio: 320 / 520;
+    display: grid;
+    place-items: center;
+  }
+}
+
+// THE TOITOI
+.fp-toitoi {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  filter: drop-shadow(0 30px 30px rgba(0,0,0,.6));
+
+  &:disabled { cursor: default; }
+
+  &__svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+  }
+
+  &__door {
+    transform-origin: 60px 255px;   // left hinge axis
+    transition: transform .9s cubic-bezier(.6,-.05,.2,1.1);
+    transform-style: preserve-3d;
+  }
+
+  &__interior {
+    opacity: 0;
+    transition: opacity .4s ease .3s;
+  }
+
+  &__heart {
+    transform-origin: 160px 230px;
+    animation: heartbeat 1.8s ease-in-out infinite;
+  }
+
+  &__hint {
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: rgba(242,232,210,.6);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes heartbeat {
+  0%, 70%, 100% { transform: scale(1); }
+  35%           { transform: scale(1.06); }
+  50%           { transform: scale(0.98); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: .35; }
+  50%      { opacity: 1; }
+}
+
+// THE NEWSPAPER
+.fp-newspaper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(420px, 92vw);
+  max-height: 88dvh;
+  overflow-y: auto;
+  transform: translate(-50%, calc(-50% + 60vh)) rotate(-2deg);
+  opacity: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,.015) 0 1px,
+      transparent 1px 4px
+    ),
+    #f2e8d2;
+  color: #1a1815;
+  font-family: 'Fraunces', serif;
+  padding: 24px 28px 20px;
+  border-radius: 2px;
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.6),
+    0 0 0 1px rgba(0,0,0,.1),
+    inset 0 0 60px rgba(120,90,40,.18);
+  transition:
+    transform 1s cubic-bezier(.2,.7,.2,1),
+    opacity .6s ease .2s;
+  pointer-events: none;
+
+  &__masthead { text-align: center; }
+  &__title {
+    font-weight: 900;
+    font-size: clamp(34px, 7vw, 52px);
+    line-height: 1;
+    letter-spacing: -.02em;
+    font-variation-settings: "opsz" 144;
+  }
+  &__sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    margin-top: 6px;
+    color: #4a3a25;
+  }
+  &__rule {
+    border: 0;
+    border-top: 3px double #1a1815;
+    margin: 14px 0 18px;
+  }
+  &__headline {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(18px, 3.6vw, 22px);
+    font-weight: 700;
+    margin: 0 0 18px;
+    line-height: 1.15;
+    text-align: center;
+  }
+  &__form {
+    display: grid;
+    gap: 12px;
+
+    mat-form-field { width: 100%; }
+    ::ng-deep .mat-mdc-text-field-wrapper { background: rgba(255,255,255,.6); }
+    ::ng-deep .mat-mdc-form-field-infix { color: #1a1815; }
+    ::ng-deep .mdc-text-field--outlined .mdc-notched-outline > * { border-color: #4a3a25 !important; }
+    ::ng-deep .mat-mdc-form-field-label, ::ng-deep .mdc-floating-label { color: #4a3a25 !important; }
+  }
+  &__submit {
+    margin-top: 6px;
+    width: 100%;
+    min-height: 44px;
+    background: #1a1815 !important;
+    color: #fcd62c !important;
+    font-family: 'IBM Plex Mono', monospace !important;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  &__error {
+    background: #c43c2c;
+    color: #fff;
+    padding: 8px 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: .05em;
+  }
+  &__foot {
+    margin-top: 14px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .15em;
+    color: #4a3a25;
+  }
+
+  &.shake { animation: paperShake .6s ease; }
+}
+
+@keyframes paperShake {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-2deg); }
+  20%      { transform: translate(calc(-50% - 8px), -50%) rotate(-3deg); }
+  40%      { transform: translate(calc(-50% + 8px), -50%) rotate(-1deg); }
+  60%      { transform: translate(calc(-50% - 6px), -50%) rotate(-3deg); }
+  80%      { transform: translate(calc(-50% + 6px), -50%) rotate(-1deg); }
+}
+
+// STAGE STATES
+.stage--opening .fp-toitoi__door,
+.stage--revealing .fp-toitoi__door,
+.stage--open .fp-toitoi__door {
+  transform: perspective(1200px) rotateY(-105deg);
+}
+.stage--revealing .fp-toitoi__interior,
+.stage--open .fp-toitoi__interior { opacity: 1; }
+
+.stage--revealing .fp-newspaper,
+.stage--open .fp-newspaper {
+  transform: translate(-50%, -50%) rotate(-2deg);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+// Mobile - the scene scales naturally because of aspect-ratio,
+// but tighten the newspaper a touch.
+@media (max-width: 480px) {
+  .fp-newspaper { padding: 18px 18px 16px; }
+}
