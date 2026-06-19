@@ -126,4 +126,6 @@
   .fp-list__btn-label { display: none; } // hide "new freepeepee" text, keep icon
   .fp-list__top { padding: 10px 12px; }
   .fp-list__search { min-width: 0; }
+  // Comfortable touch targets for the icon-only action buttons on phones
+  .fp-list__top-actions button { min-height: 40px; }
 }
