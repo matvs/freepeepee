@@ -27,28 +27,34 @@ describe('AuthService', () => {
 
   afterEach(() => http.verify());
 
-  it('stores access token in localStorage on rememberMe=true', () => {
-    svc.login('matvs', 'lap00p00', true).subscribe();
+  it('stores access token + role in localStorage on rememberMe=true', () => {
+    svc.login('admin', 'pw', true).subscribe();
     const req = http.expectOne(r => r.url.endsWith('/api/auth/login'));
-    req.flush({ accessToken: 'a.b.c', refreshToken: 'r.e.f', expiresAtEpoch: 9999999 });
+    req.flush({ accessToken: 'a.b.c', refreshToken: 'r.e.f', expiresAtEpoch: 9999999999, role: 'ADMIN' });
     expect(localStorage.getItem('fp.access')).toBe('a.b.c');
     expect(svc.isAuthenticated()).toBeTrue();
+    expect(svc.isAdmin()).toBeTrue();
   });
 
   it('stores in sessionStorage when rememberMe=false', () => {
-    svc.login('matvs', 'lap00p00', false).subscribe();
+    svc.login('admin', 'pw', false).subscribe();
     http.expectOne(r => r.url.endsWith('/api/auth/login'))
-        .flush({ accessToken: 'a.b.c', refreshToken: null, expiresAtEpoch: 9999999 });
+        .flush({ accessToken: 'a.b.c', refreshToken: null, expiresAtEpoch: 9999999999, role: 'ADMIN' });
     expect(localStorage.getItem('fp.access')).toBeNull();
     expect(sessionStorage.getItem('fp.access')).toBe('a.b.c');
   });
 
-  it('clears tokens and redirects on logout', () => {
+  it('clears tokens and redirects to /map on logout', () => {
     localStorage.setItem('fp.access', 'x');
     sessionStorage.setItem('fp.access', 'y');
     svc.logout();
     expect(localStorage.getItem('fp.access')).toBeNull();
     expect(sessionStorage.getItem('fp.access')).toBeNull();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/map']);
+  });
+
+  it('redirects to a custom target on logout', () => {
+    svc.logout('/admin');
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/admin']);
   });
 });
