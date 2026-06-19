@@ -23,8 +23,8 @@ class AuthFlowIT(
 
     describe("POST /api/auth/login") {
 
-        it("returns 200 + token for matvs / lap00p00") {
-            val body = mapper.writeValueAsString(LoginRequest("matvs", "lap00p00", rememberMe = true))
+        it("returns 200 + token for the configured admin") {
+            val body = mapper.writeValueAsString(LoginRequest("admin", "test-admin-pw", rememberMe = true))
             mvc.post("/api/auth/login") {
                 contentType = MediaType.APPLICATION_JSON
                 content = body
@@ -38,7 +38,7 @@ class AuthFlowIT(
         }
 
         it("returns 401 for wrong password") {
-            val body = mapper.writeValueAsString(LoginRequest("matvs", "wrong", rememberMe = false))
+            val body = mapper.writeValueAsString(LoginRequest("admin", "wrong", rememberMe = false))
             mvc.post("/api/auth/login") {
                 contentType = MediaType.APPLICATION_JSON
                 content = body

@@ -26,7 +26,7 @@ class ToiletApiIT(
 ) : DescribeSpec({
 
     fun token(): String {
-        val body = mapper.writeValueAsString(LoginRequest("matvs", "lap00p00", false))
+        val body = mapper.writeValueAsString(LoginRequest("admin", "test-admin-pw", false))
         val res = mvc.post("/api/auth/login") {
             contentType = MediaType.APPLICATION_JSON
             content = body
