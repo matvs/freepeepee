@@ -27,7 +27,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("io.arrow-kt:arrow-core:1.2.4")
 
     implementation("org.hibernate.orm:hibernate-spatial:6.5.2.Final")
     implementation("org.locationtech.jts:jts-core:1.20.0")

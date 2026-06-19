@@ -1,4 +1,4 @@
-export type ToiletType = 'MCDONALDS' | 'GAS_STATION' | 'PARK' | 'CAFE' | 'PUBLIC' | 'OTHER';
+export type ToiletType = 'MCDONALDS' | 'GAS_STATION' | 'PARK' | 'CAFE' | 'PUBLIC' | 'TRAIN' | 'OTHER';
 
 export interface Toilet {
   id: string;

@@ -5,7 +5,7 @@
 | Layer | Tech | Notes |
 |---|---|---|
 | Frontend | Angular 18 (standalone), Angular Material, Leaflet, SCSS, Pug (via `@webdiscus/pug-loader`), Service Worker (`@angular/service-worker`) | PWA installable, works offline for previously-loaded tiles and toilet list. |
-| Backend  | Spring Boot 3.3, Kotlin 1.9 (`-Xcontext-receivers`), Spring Security, Spring Data JPA, Hibernate Spatial 6.5, JJWT 0.12, Flyway 10, Arrow Core. | Stateless API, BCrypt cost 12, JWT only. |
+| Backend  | Spring Boot 3.3, Kotlin 1.9 (`-Xcontext-receivers`), Spring Security, Spring Data JPA, Hibernate Spatial 6.5, JJWT 0.12, Flyway 10. | Stateless API, BCrypt cost 12, JWT only. |
 | Database | PostgreSQL 16 + PostGIS 3.4 | Relational + geospatial. Audit log append-only (DB trigger). |
 | Maps     | OpenStreetMap raster tiles, Leaflet 1.9 | No Google Maps; OSM is free, attribution required. |
 | Edge     | nginx 1.27-alpine (compose), host nginx for TLS | TLS terminated on host, plain HTTP into compose on `127.0.0.1:8081`. |
@@ -214,7 +214,8 @@ stateDiagram-v2
     [*] --> Closed: route /login
     Closed --> Opening: click door
     Opening --> Revealing: after 950 ms
-    Revealing --> Open: after 750 ms
+    Revealing --> Handing: after 100 ms
+    Handing --> Open: after 1450 ms
     Open --> Submitting: submit valid form
     Submitting --> Authenticated: 200
     Submitting --> Failed: 401 / error
@@ -225,7 +226,7 @@ stateDiagram-v2
 ## Security model
 
 - **Passwords** : BCrypt (cost 12). Hash only persisted; raw never logged. Rotate cost upward as hardware improves.
-- **Sessions** : none. Stateless JWT (HS256, ≥32-byte secret, configured via env). Short-lived access token (30 min default), optional 14-day refresh issued only on `rememberMe=true`.
+- **Sessions** : none. Stateless JWT (HS512, ≥64-byte secret, configured via env). Short-lived access token (30 min default), optional 14-day refresh issued only on `rememberMe=true`.
 - **Transport** : TLS terminated by host nginx. Backend trusts `X-Forwarded-Proto`, `X-Forwarded-For`, `X-Request-Id` headers from the edge it sits behind.
 - **Headers** : `X-Content-Type-Options nosniff`, `X-Frame-Options DENY`, CSP `default-src 'self'`, `Permissions-Policy geolocation=(self)`.
 - **Audit log** : append-only at the DB level via trigger. Even an authenticated admin cannot rewrite history through the API.

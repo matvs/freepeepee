@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.OffsetDateTime
 import java.util.UUID
 
-enum class ToiletType { MCDONALDS, GAS_STATION, PARK, CAFE, PUBLIC, OTHER }
+enum class ToiletType { MCDONALDS, GAS_STATION, PARK, CAFE, PUBLIC, TRAIN, OTHER }
 
 @Entity
 @Table(name = "toilet")

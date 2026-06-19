@@ -1,0 +1,29 @@
+h2(mat-dialog-title) filter freepeepees
+
+mat-dialog-content
+  .fp-filter
+
+    mat-form-field(appearance="outline", subscriptSizing="dynamic")
+      mat-label city
+      mat-select([(ngModel)]="draft.city")
+        mat-option([value]="null") all cities
+        mat-option(*ngFor="let c of cities", [value]="c") {{ c }}
+
+    .fp-filter__section
+      .fp-filter__label type
+      .fp-filter__chips
+        button(*ngFor="let t of allTypes", type="button", mat-stroked-button,
+               [class.fp-filter__chip--on]="isOn(t)", (click)="toggleType(t)")
+          | {{ t.replace('_', ' ') }}
+
+    .fp-filter__section
+      .fp-filter__label status
+      mat-button-toggle-group([(ngModel)]="draft.status", aria-label="status filter")
+        mat-button-toggle(value="all") all
+        mat-button-toggle(value="working") working
+        mat-button-toggle(value="broken") broken
+
+mat-dialog-actions(align="end")
+  button(mat-button, type="button", (click)="reset()") reset
+  button(mat-button, type="button", (click)="cancel()") cancel
+  button(mat-flat-button, color="primary", type="button", (click)="apply()") apply

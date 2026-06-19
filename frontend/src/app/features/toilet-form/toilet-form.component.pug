@@ -1,19 +1,19 @@
 h2(mat-dialog-title) {{ isEdit ? 'edit freepeepee' : 'new freepeepee' }}
 form([formGroup]="form", (ngSubmit)="submit()")
   mat-dialog-content.fp-form
+
     mat-form-field(appearance="outline")
       mat-label name
       input(matInput, formControlName="name", maxlength="120")
+
+    //- Address field with live geocoding suggestions
     mat-form-field(appearance="outline")
       mat-label address
-      input(matInput, formControlName="address", maxlength="255")
-    .fp-form__row
-      mat-form-field(appearance="outline")
-        mat-label latitude
-        input(matInput, type="number", step="any", formControlName="lat")
-      mat-form-field(appearance="outline")
-        mat-label longitude
-        input(matInput, type="number", step="any", formControlName="lon")
+      input(matInput, formControlName="address", maxlength="255", placeholder="type to search…", autocomplete="off")
+    .fp-form__geo(*ngIf="geoResults().length > 0")
+      button.fp-form__geo-opt(*ngFor="let r of geoResults()", type="button", (click)="pickGeoResult(r)") {{ r.display_name }}
+    p.fp-form__coords(*ngIf="coordsLabel()") 📍 {{ coordsLabel() }}
+
     .fp-form__row
       mat-form-field(appearance="outline")
         mat-label type
@@ -22,10 +22,12 @@ form([formGroup]="form", (ngSubmit)="submit()")
       mat-form-field(appearance="outline")
         mat-label PIN (optional)
         input(matInput, formControlName="pinCode", maxlength="32")
+
     mat-slide-toggle(formControlName="isWorking") working
     mat-form-field(appearance="outline")
       mat-label notes
       textarea(matInput, formControlName="notes", rows="3", maxlength="4000")
+
   mat-dialog-actions(align="end")
     button(mat-button, type="button", (click)="cancel()") cancel
     button(mat-flat-button, color="primary", type="submit", [disabled]="form.invalid || submitting()") save

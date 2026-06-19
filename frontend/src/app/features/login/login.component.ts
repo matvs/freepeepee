@@ -10,10 +10,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../core/auth/auth.service';
 
 /** Login choreography :
- *    closed -> opening (1s door swing) -> revealing (duck pushes newspaper) -> open (form usable)
+ *    closed -> opening (door swings) -> revealing (duck reads 3s) -> handing (duck lowers paper 2.5s) -> open (form usable)
  *  Failed login does NOT reset the animation - only shakes the newspaper.
  */
-type Stage = 'closed' | 'opening' | 'revealing' | 'open';
+type Stage = 'closed' | 'opening' | 'revealing' | 'handing' | 'open';
 
 @Component({
   selector: 'fp-login',
@@ -45,8 +45,9 @@ export class LoginComponent {
   openDoor(): void {
     if (this.stage() !== 'closed') return;
     this.stage.set('opening');
-    setTimeout(() => this.stage.set('revealing'), 950);
-    setTimeout(() => this.stage.set('open'), 1700);
+    setTimeout(() => this.stage.set('revealing'), 950);  // door fully open
+    setTimeout(() => this.stage.set('handing'),  1050);  // duck skips the read, hands paper immediately
+    setTimeout(() => this.stage.set('open'),     2500);  // 1.45s handing animation → form appears
   }
 
   submit(): void {

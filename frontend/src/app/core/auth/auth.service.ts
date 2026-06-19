@@ -20,7 +20,11 @@ export class AuthService {
   private readonly router = inject(Router);
 
   readonly token = signal<string | null>(localStorage.getItem(KEY_ACCESS));
-  readonly isAuthenticated = computed(() => this.token() !== null);
+  readonly isAuthenticated = computed(() => {
+    if (this.token() === null) return false;
+    const exp = Number(localStorage.getItem(KEY_EXP) ?? sessionStorage.getItem(KEY_EXP));
+    return exp > 0 && Math.floor(Date.now() / 1000) < exp;
+  });
 
   login(username: string, password: string, rememberMe: boolean): Observable<TokenResponse> {
     return this.http
