@@ -14,8 +14,16 @@ coverage/
 .gradle/
 build/
 out/
+bin/
 .idea/
 *.iml
+
+# ssh keys / secrets (never commit private keys)
+yes
+yes.pub
+*.pem
+id_rsa
+id_ed25519
 
 # os
 .DS_Store
