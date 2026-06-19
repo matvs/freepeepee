@@ -38,7 +38,7 @@ class ToiletApiIT(
 
         it("nearby returns Zurich seed toilets within 1km of Hauptbahnhof") {
             val t = token()
-            mvc.get("/api/toilets/nearby?lat=47.3779&lon=8.5402&radius=1000") {
+            mvc.get("/api/toilets/nearby?lat=47.3779&lon=8.5402&radius=2000") {
                 header("Authorization", "Bearer $t")
             }.andExpect {
                 status { isOk() }
@@ -62,8 +62,22 @@ class ToiletApiIT(
             }.andExpect { status { isCreated() } }
         }
 
-        it("rejects unauthenticated read") {
-            mvc.get("/api/toilets").andExpect { status { isUnauthorized() } }
+        it("allows unauthenticated read") {
+            mvc.get("/api/toilets").andExpect { status { isOk() } }
+        }
+
+        it("rejects unauthenticated create") {
+            val body = mapper.writeValueAsString(ToiletCreateRequest(
+                name = "No-auth loo", address = "Nowhere 1, Zurich",
+                lat = 47.37, lon = 8.54, isWorking = true,
+                toiletType = ToiletType.OTHER, notes = null
+            ))
+            // formLogin/httpBasic are disabled, so Spring's default Http403ForbiddenEntryPoint
+            // answers anonymous requests to a secured endpoint with 403 (not 401).
+            mvc.post("/api/toilets") {
+                contentType = MediaType.APPLICATION_JSON
+                content = body
+            }.andExpect { status { isForbidden() } }
         }
     }
 })

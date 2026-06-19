@@ -32,6 +32,9 @@ class SecurityConfig(
         .authorizeHttpRequests {
             it.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
               .requestMatchers("/actuator/health/**").permitAll()
+              .requestMatchers(HttpMethod.GET, "/api/toilets/**").permitAll()
+              .requestMatchers("/api/toilets/**").hasRole("ADMIN")
+              .requestMatchers("/api/audit/**").hasRole("ADMIN")
               .anyRequest().authenticated()
         }
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
