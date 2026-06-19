@@ -9,7 +9,9 @@
         mat-icon list
       mat-button-toggle(value="map", routerLink="/map", matTooltip="map view")
         mat-icon map
-    button(mat-icon-button, (click)="logout()", matTooltip="sign out", aria-label="sign out")
+    button(*ngIf="isAdmin()", mat-icon-button, routerLink="/log", routerLinkActive="fp-shell__nav-active", matTooltip="change log", aria-label="change log")
+      mat-icon history
+    button(*ngIf="isAdmin()", mat-icon-button, (click)="logout()", matTooltip="sign out", aria-label="sign out")
       mat-icon logout
   main.fp-shell__main
     router-outlet

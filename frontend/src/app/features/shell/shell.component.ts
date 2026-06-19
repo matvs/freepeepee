@@ -23,6 +23,8 @@ export class ShellComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
+  readonly isAdmin = this.auth.isAdmin;
+
   logout(): void { this.auth.logout(); }
 
   get currentRoute(): string {
