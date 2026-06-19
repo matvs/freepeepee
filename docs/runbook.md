@@ -36,6 +36,8 @@ DB_USER=freepeepee
 DB_PASSWORD=$(openssl rand -base64 32)
 JWT_SECRET=$(openssl rand -base64 48)
 CORS_ORIGINS=https://freepeepee.matvs.dev
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=$(openssl rand -base64 24)
 EOF
 chmod 600 .env
 
@@ -53,9 +55,12 @@ sudo nginx -t && sudo systemctl reload nginx
 sudo certbot --nginx -d freepeepee.matvs.dev
 ```
 
-You should be able to hit `https://freepeepee.matvs.dev` and see the toi-toi door. Tap, log in as `matvs` / `lap00p00`.
+You should be able to hit `https://freepeepee.matvs.dev` and see the catalogue. The public site is
+**read-only** — no login. To manage entries, navigate to `https://freepeepee.matvs.dev/admin`
+(unlinked) and sign in with the `ADMIN_USERNAME` / `ADMIN_PASSWORD` from `.env`.
 
-> Change the password immediately. The seed value exists because you specified it; treat it as bootstrap-only.
+> The admin account is provisioned/updated from those env vars on every API start, so there is no
+> seeded password to rotate in the database — change `.env` and restart `api` (see Rotating secrets).
 
 ## Day-to-day commands
 
@@ -119,6 +124,14 @@ DB password rotation requires updating both `.env` and the Postgres role :
 ```bash
 docker compose exec db psql -U freepeepee -c "ALTER USER freepeepee WITH PASSWORD 'newpw';"
 sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=newpw|" /opt/freepeepee/.env
+docker compose up -d api
+```
+
+Admin password rotation is just an `.env` change — the API re-hashes `ADMIN_PASSWORD` into the
+`app_user` row on every start :
+
+```bash
+sed -i "s|^ADMIN_PASSWORD=.*|ADMIN_PASSWORD=$(openssl rand -base64 24)|" /opt/freepeepee/.env
 docker compose up -d api
 ```
 
