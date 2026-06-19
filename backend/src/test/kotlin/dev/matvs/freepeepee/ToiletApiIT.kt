@@ -7,7 +7,7 @@ import dev.matvs.freepeepee.web.dto.ToiletCreateRequest
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.collections.shouldHaveAtLeastSize
-import io.kotest.matchers.ints.shouldBeGreaterThanOrEqualTo
+import io.kotest.matchers.comparables.shouldBeGreaterThanOrEqualTo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
