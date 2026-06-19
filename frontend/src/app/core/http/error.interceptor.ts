@@ -7,8 +7,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {
-      if (err.status === 401 && !req.url.endsWith('/api/auth/login')) {
-        auth.logout();
+      if ((err.status === 401 || err.status === 403) && !req.url.endsWith('/api/auth/login')) {
+        auth.logout('/admin');
       }
       return throwError(() => err);
     })

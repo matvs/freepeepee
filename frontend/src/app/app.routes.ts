@@ -1,16 +1,15 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
-    path: 'login',
+    path: 'admin',
     canActivate: [guestGuard],
     loadComponent: () => import('./features/login/login.component').then(m => m.LoginComponent)
   },
   {
     path: '',
-    canActivate: [authGuard],
     loadComponent: () => import('./features/shell/shell.component').then(m => m.ShellComponent),
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'map' },
@@ -21,6 +20,11 @@ export const routes: Routes = [
       {
         path: 'map',
         loadComponent: () => import('./features/toilets-map/toilets-map.component').then(m => m.ToiletsMapComponent)
+      },
+      {
+        path: 'log',
+        canActivate: [adminGuard],
+        loadComponent: () => import('./features/audit-log/audit-log.component').then(m => m.AuditLogComponent)
       }
     ]
   },

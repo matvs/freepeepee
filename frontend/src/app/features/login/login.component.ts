@@ -56,7 +56,7 @@ export class LoginComponent {
     this.errorMsg.set(null);
     const { username, password, rememberMe } = this.form.getRawValue();
     this.auth.login(username, password, rememberMe).subscribe({
-      next: () => this.router.navigate(['/list']),
+      next: () => this.router.navigate(['/map']),
       error: err => {
         this.submitting.set(false);
         this.errorMsg.set(err.status === 401 ? 'Wrong username or password.' : 'Something broke. Try again.');
