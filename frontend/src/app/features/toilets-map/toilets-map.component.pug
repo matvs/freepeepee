@@ -11,7 +11,7 @@
       button(mat-stroked-button, (click)="findNearMe()", matTooltip="find toilets within 2 km of your location")
         mat-icon my_location
         span.fp-map__btn-label find near me
-      button(mat-flat-button, color="accent", (click)="add()", matTooltip="add new freepeepee")
+      button(*ngIf="isAdmin()", mat-flat-button, color="accent", (click)="add()", matTooltip="add new freepeepee")
         mat-icon add
         span.fp-map__btn-label new freepeepee
   .fp-map__canvas(#mapEl)
