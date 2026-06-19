@@ -26,7 +26,7 @@ services:
       DB_USER: ${DB_USER:-freepeepee}
       DB_PASSWORD: ${DB_PASSWORD:?required}
       JWT_SECRET: ${JWT_SECRET:?required - at least 32 bytes}
-      CORS_ORIGINS: ${CORS_ORIGINS:-https://freepeepee.matvs.dev}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8081,https://freepeepee.matvs.dev}
       SERVER_PORT: 8080
     networks: [backend, web]
 

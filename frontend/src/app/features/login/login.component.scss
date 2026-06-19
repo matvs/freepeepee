@@ -58,11 +58,7 @@
     transform-origin: 60px 255px;   // left hinge axis
     transition: transform .9s cubic-bezier(.6,-.05,.2,1.1);
     transform-style: preserve-3d;
-  }
-
-  &__interior {
-    opacity: 0;
-    transition: opacity .4s ease .3s;
+    backface-visibility: hidden;
   }
 
   &__heart {
@@ -82,6 +78,65 @@
     color: rgba(242,232,210,.6);
     animation: pulse 1.6s ease-in-out infinite;
   }
+}
+
+// DUCK EXPRESSIONS — reading phase: eye-roll and brow
+.stage--revealing {
+  .fp-duck__iris { animation: eyeRoll 4s ease-in-out infinite; }
+  .fp-duck__brow { animation: browShift 4s ease-in-out infinite; }
+}
+
+// Handing phase: duck makes resigned eye contact as it shoves the newspaper at you
+.stage--handing,
+.stage--open {
+  .fp-duck__iris    { animation: eyeLookForward 1s ease forwards; }
+  .fp-duck__brow    { animation: browResigned 1.2s ease forwards; }
+  .fp-duck__newspaper { animation: handNewspaper 1.4s cubic-bezier(.2,0,.1,1) forwards; }
+}
+
+.fp-duck__iris {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.fp-duck__brow {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.fp-duck__newspaper {
+  /* 50% 65% = center of newspaper rect (x=160, y=298) in the 320×460 SVG viewport */
+  transform-box: view-box;
+  transform-origin: 50% 65%;
+}
+
+@keyframes eyeRoll {
+  // bored default: iris rests slightly high in socket
+  0%, 20%, 100% { transform: translateY(0); }
+  // the roll: iris drifts up behind the droopy lid, held there with contempt
+  40%, 72%      { transform: translateY(-5px); }
+  // brief return before next roll
+  85%           { transform: translateY(-1px); }
+}
+
+@keyframes browShift {
+  0%, 20%, 100% { transform: translateY(0) rotate(0deg); }
+  40%, 72%      { transform: translateY(-2px) rotate(-2deg); }
+  85%           { transform: translateY(-0.5px); }
+}
+
+@keyframes eyeLookForward {
+  0%   { transform: translateY(-4px); }
+  100% { transform: translateY(2px); }
+}
+
+@keyframes browResigned {
+  0%   { transform: translateY(-1.5px) rotate(-1.5deg); }
+  100% { transform: translateY(1px) rotate(1deg); }
+}
+
+@keyframes handNewspaper {
+  0%   { transform: translateY(0)    scale(1); }
+  8%   { transform: translateY(-10px) scale(1.08); }
+  100% { transform: translateY(60px)  scale(1.75); }
 }
 
 @keyframes heartbeat {
@@ -161,8 +216,12 @@
     mat-form-field { width: 100%; }
     ::ng-deep .mat-mdc-text-field-wrapper { background: rgba(255,255,255,.6); }
     ::ng-deep .mat-mdc-form-field-infix { color: #1a1815; }
+    ::ng-deep input.mat-mdc-input-element { color: #1a1815 !important; caret-color: #1a1815; }
+    ::ng-deep textarea.mat-mdc-input-element { color: #1a1815 !important; }
     ::ng-deep .mdc-text-field--outlined .mdc-notched-outline > * { border-color: #4a3a25 !important; }
     ::ng-deep .mat-mdc-form-field-label, ::ng-deep .mdc-floating-label { color: #4a3a25 !important; }
+    ::ng-deep .mat-mdc-checkbox .mdc-form-field { color: #1a1815; }
+    ::ng-deep .mat-mdc-checkbox label { color: #1a1815; }
   }
   &__submit {
     margin-top: 6px;
@@ -205,13 +264,11 @@
 // STAGE STATES
 .stage--opening .fp-toitoi__door,
 .stage--revealing .fp-toitoi__door,
+.stage--handing .fp-toitoi__door,
 .stage--open .fp-toitoi__door {
   transform: perspective(1200px) rotateY(-105deg);
 }
-.stage--revealing .fp-toitoi__interior,
-.stage--open .fp-toitoi__interior { opacity: 1; }
-
-.stage--revealing .fp-newspaper,
+// HTML form only appears AFTER the duck has fully handed the paper
 .stage--open .fp-newspaper {
   transform: translate(-50%, -50%) rotate(-2deg);
   opacity: 1;

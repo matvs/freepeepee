@@ -7,6 +7,7 @@ import dev.matvs.freepeepee.web.dto.ToiletCreateRequest
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.collections.shouldHaveAtLeastSize
+import io.kotest.matchers.ints.shouldBeGreaterThanOrEqualTo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -43,8 +44,7 @@ class ToiletApiIT(
                 status { isOk() }
             }.andReturn().response.contentAsString.let {
                 val arr = mapper.readTree(it)
-                arr.size().shouldBe(arr.size()) // sanity
-                (arr.size() >= 3) shouldBe true
+                arr.size() shouldBeGreaterThanOrEqualTo 3
             }
         }
 

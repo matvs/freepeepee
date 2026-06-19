@@ -2,9 +2,16 @@
   .fp-map__bar
     .fp-map__count
       mat-icon place
-      span {{ count() }} freepeepees on map
+      span {{ count() }} freepeepees visible
     .fp-map__actions
-      button(mat-flat-button, color="accent", (click)="findNearMe()", matTooltip="grant location to find toilets within 2 km")
+      button(mat-stroked-button, (click)="openFilter()", [class.fp-map__filter-active]="filterCount() > 0",
+             matTooltip="filter by city, type or status")
+        mat-icon filter_list
+        | {{ filterCount() > 0 ? 'filter (' + filterCount() + ')' : 'filter' }}
+      button(mat-stroked-button, (click)="findNearMe()", matTooltip="find toilets within 2 km of your location")
         mat-icon my_location
-        | find freepeepee close to me
+        span.fp-map__btn-label find near me
+      button(mat-flat-button, color="accent", (click)="add()", matTooltip="add new freepeepee")
+        mat-icon add
+        span.fp-map__btn-label new freepeepee
   .fp-map__canvas(#mapEl)

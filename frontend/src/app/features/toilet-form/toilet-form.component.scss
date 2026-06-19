@@ -1,7 +1,7 @@
 .fp-form {
   display: grid;
   gap: 8px;
-  min-width: 320px;
+  min-width: min(320px, 90vw);
 
   mat-form-field { width: 100%; }
 
@@ -12,4 +12,39 @@
   }
 
   mat-slide-toggle { margin: 4px 0 8px; }
+
+  &__geo {
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 4px;
+    max-height: 180px;
+    overflow-y: auto;
+    margin-top: -4px;
+  }
+  &__geo-opt {
+    display: block;
+    width: 100%;
+    padding: 9px 12px;
+    background: none;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    color: inherit;
+    font-family: inherit;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+    line-height: 1.3;
+    &:hover { background: rgba(255,255,255,.07); }
+    &:last-child { border-bottom: none; }
+  }
+
+  &__coords {
+    margin: -4px 0 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    opacity: .55;
+  }
+}
+
+@media (max-width: 480px) {
+  .fp-form__row { grid-template-columns: 1fr; }
 }

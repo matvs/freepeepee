@@ -1,8 +1,10 @@
 package dev.matvs.freepeepee.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import dev.matvs.freepeepee.domain.Toilet
 import dev.matvs.freepeepee.repository.ToiletRepository
 import dev.matvs.freepeepee.repository.UserRepository
+import dev.matvs.freepeepee.security.AuditContext
 import dev.matvs.freepeepee.security.JwtService
 import dev.matvs.freepeepee.security.TokenPair
 import dev.matvs.freepeepee.web.dto.ToiletCreateRequest
@@ -50,7 +52,9 @@ sealed interface ToiletOpResult<out T> {
 @Service
 class ToiletService(
     private val repo: ToiletRepository,
-    private val audit: AuditService
+    private val audit: AuditService,
+    private val ctx: AuditContext,
+    private val mapper: ObjectMapper
 ) {
     private val gf = GeometryFactory(PrecisionModel(), 4326)
 
@@ -61,7 +65,8 @@ class ToiletService(
 
     @Transactional
     fun create(req: ToiletCreateRequest): Toilet {
-        val saved = repo.save(req.toEntity())
+        val entity = req.toEntity().apply { createdBy = ctx.actorId() }
+        val saved = repo.save(entity)
         audit.recordCreate("Toilet", saved.id!!, snapshot(saved))
         return saved
     }
@@ -103,8 +108,7 @@ class ToiletService(
 
     fun search(query: String): List<Toilet> = repo.search(query)
 
-    private fun snapshot(t: Toilet) =
-        """{"name":"${t.name}","addr":"${t.address}","lon":${t.location.x},"lat":${t.location.y},"pin":${t.pinCode?.let{"\"$it\""}},"working":${t.isWorking},"type":"${t.toiletType}","notes":${t.notes?.let{"\"$it\""}}}"""
+    private fun snapshot(t: Toilet): String = mapper.writeValueAsString(t.snapshotForAudit())
 }
 
 /** Mutable snapshot used purely for field-level diffing in AuditService. */
