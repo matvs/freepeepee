@@ -3,6 +3,8 @@ package dev.matvs.freepeepee.repository
 import dev.matvs.freepeepee.domain.AppUser
 import dev.matvs.freepeepee.domain.AuditEntry
 import dev.matvs.freepeepee.domain.Toilet
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -50,4 +52,6 @@ interface UserRepository : JpaRepository<AppUser, UUID> {
 }
 
 @Repository
-interface AuditRepository : JpaRepository<AuditEntry, Long>
+interface AuditRepository : JpaRepository<AuditEntry, Long> {
+    fun findAllByOrderByOccurredAtDesc(pageable: Pageable): Page<AuditEntry>
+}
