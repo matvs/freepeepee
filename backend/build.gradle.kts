@@ -60,6 +60,13 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    // Testcontainers' docker-java client otherwise negotiates an ancient Docker API version (1.32),
+    // which modern daemons (API >= 1.40) reject with HTTP 400. Pin a modern, widely-supported
+    // version on the forked test JVM. Overridable via -Papi.version / DOCKER_API_VERSION.
+    val dockerApiVersion = (project.findProperty("api.version") as String?)
+        ?: System.getenv("DOCKER_API_VERSION") ?: "1.43"
+    systemProperty("api.version", dockerApiVersion)
+    environment("DOCKER_API_VERSION", dockerApiVersion)
     finalizedBy(tasks.jacocoTestReport)
 }
 

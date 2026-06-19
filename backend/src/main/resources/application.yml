@@ -38,6 +38,9 @@ freepeepee:
     refresh-ttl-days: 14
   cors:
     allowed-origins: ${CORS_ORIGINS:http://localhost:4200}
+  admin:
+    username: ${ADMIN_USERNAME:}
+    password: ${ADMIN_PASSWORD:}
 
 management:
   endpoints:
