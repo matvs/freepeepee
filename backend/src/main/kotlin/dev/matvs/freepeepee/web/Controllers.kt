@@ -19,7 +19,7 @@ class AuthController(private val auth: AuthService) {
     fun login(@Valid @RequestBody req: LoginRequest): ResponseEntity<Any> =
         when (val r = auth.login(req.username, req.password, req.rememberMe)) {
             is AuthResult.Success -> ResponseEntity.ok(
-                TokenResponse(r.tokens.access, r.tokens.refresh, r.tokens.expiresAt.epochSecond)
+                TokenResponse(r.tokens.access, r.tokens.refresh, r.tokens.expiresAt.epochSecond, r.role)
             )
             AuthResult.InvalidCredentials -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "invalid_credentials"))
             AuthResult.Disabled -> ResponseEntity.status(HttpStatus.FORBIDDEN).body(mapOf("error" to "account_disabled"))

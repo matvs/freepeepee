@@ -72,4 +72,4 @@ data class LoginRequest(
     val rememberMe: Boolean = false
 )
 
-data class TokenResponse(val accessToken: String, val refreshToken: String?, val expiresAtEpoch: Long)
+data class TokenResponse(val accessToken: String, val refreshToken: String?, val expiresAtEpoch: Long, val role: String)

@@ -34,6 +34,7 @@ class AuthFlowIT(
                 val tree = mapper.readTree(json)
                 tree["accessToken"].asText().shouldNotBeEmpty()
                 tree["refreshToken"].asText().shouldNotBeEmpty()
+                tree["role"].asText() shouldBe "ADMIN"
             }
         }
 
