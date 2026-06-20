@@ -8,11 +8,13 @@ interface TokenResponse {
   accessToken: string;
   refreshToken: string | null;
   expiresAtEpoch: number;
+  role: string;
 }
 
 const KEY_ACCESS = 'fp.access';
 const KEY_REFRESH = 'fp.refresh';
 const KEY_EXP = 'fp.exp';
+const KEY_ROLE = 'fp.role';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -26,19 +28,23 @@ export class AuthService {
     return exp > 0 && Math.floor(Date.now() / 1000) < exp;
   });
 
+  readonly role = signal<string | null>(localStorage.getItem(KEY_ROLE) ?? sessionStorage.getItem(KEY_ROLE));
+  readonly isAdmin = computed(() => this.isAuthenticated() && this.role() === 'ADMIN');
+
   login(username: string, password: string, rememberMe: boolean): Observable<TokenResponse> {
     return this.http
       .post<TokenResponse>(`${environment.api}/api/auth/login`, { username, password, rememberMe })
       .pipe(tap(t => this.setTokens(t, rememberMe)));
   }
 
-  logout(): void {
-    [KEY_ACCESS, KEY_REFRESH, KEY_EXP].forEach(k => {
+  logout(redirect = '/map'): void {
+    [KEY_ACCESS, KEY_REFRESH, KEY_EXP, KEY_ROLE].forEach(k => {
       localStorage.removeItem(k);
       sessionStorage.removeItem(k);
     });
     this.token.set(null);
-    this.router.navigate(['/login']);
+    this.role.set(null);
+    this.router.navigate([redirect]);
   }
 
   private setTokens(t: TokenResponse, rememberMe: boolean): void {
@@ -46,6 +52,8 @@ export class AuthService {
     store.setItem(KEY_ACCESS, t.accessToken);
     if (t.refreshToken) store.setItem(KEY_REFRESH, t.refreshToken);
     store.setItem(KEY_EXP, String(t.expiresAtEpoch));
+    store.setItem(KEY_ROLE, t.role);
     this.token.set(t.accessToken);
+    this.role.set(t.role);
   }
 }

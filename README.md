@@ -46,7 +46,7 @@ docker run --name pg-fp -e POSTGRES_PASSWORD=changeme -e POSTGRES_DB=freepeepee 
 
 # 2. backend
 cd backend
-DB_PASSWORD=changeme JWT_SECRET=$(openssl rand -base64 48) ./gradlew bootRun
+DB_PASSWORD=changeme JWT_SECRET=$(openssl rand -base64 48) ADMIN_USERNAME=admin ADMIN_PASSWORD=changeme ./gradlew bootRun
 
 # 3. frontend
 cd ../frontend
@@ -54,12 +54,14 @@ npm i
 npm start    # http://localhost:4200
 ```
 
-Open http://localhost:4200, tap the toi-toi door, sign in as **matvs** / **lap00p00**.
+Open http://localhost:4200 — the catalogue is **public and read-only**. To edit, go to
+`http://localhost:4200/admin` and sign in with the `ADMIN_USERNAME` / `ADMIN_PASSWORD` you set
+in your environment. There is intentionally no link to `/admin` in the UI.
 
 ## Quickstart (Docker)
 
 ```bash
-cp .env.example .env   # then fill in DB_PASSWORD, JWT_SECRET, VERSION
+cp .env.example .env   # then fill in DB_PASSWORD, JWT_SECRET, ADMIN_USERNAME, ADMIN_PASSWORD, VERSION
 docker compose up -d --build
 # open http://localhost:8081
 ```
@@ -81,7 +83,7 @@ See [`docs/runbook.md`](docs/runbook.md). Short version : tag `v0.1.0`, GitHub A
 
 **Is** : production-shaped code with the security boundary, audit log, optimistic locking, PostGIS geospatial query, and PWA wiring already correct. Tests exist for the highest-risk paths (auth flow end-to-end, audit diff, CRUD over real PostGIS).
 
-**Isn't** : exhaustively tested. The login animation is opinionated and untested in CI; the search index is naive `to_tsvector('simple', …)` without language stemming; there's no rate limiter on `/api/auth/login`; there is no admin-only view of the audit log surfaced in the UI. These are intentional gaps – fix in priority order.
+**Isn't** : exhaustively tested. The login animation is opinionated and untested in CI; the search index is naive `to_tsvector('simple', …)` without language stemming; there's no rate limiter on `/api/auth/login`. These are intentional gaps – fix in priority order.
 
 ## License
 

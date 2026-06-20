@@ -20,7 +20,9 @@ class PostgisInitializer : ApplicationContextInitializer<ConfigurableApplication
             "spring.datasource.username=${PostgisContainer.username}",
             "spring.datasource.password=${PostgisContainer.password}",
             "freepeepee.jwt.secret=test_secret_at_least_32_bytes_xxxxxxxxxxxxxxxx",
-            "freepeepee.cors.allowed-origins=http://localhost:4200"
+            "freepeepee.cors.allowed-origins=http://localhost:4200",
+            "freepeepee.admin.username=admin",
+            "freepeepee.admin.password=test-admin-pw"
         ).applyTo(ctx.environment)
     }
 }

@@ -12,7 +12,7 @@
       button(mat-stroked-button, (click)="findNearMe()", matTooltip="show toilets within 2 km of your location")
         mat-icon my_location
         span.fp-list__btn-label find near me
-      button(mat-flat-button, color="primary", (click)="add()")
+      button(*ngIf="isAdmin()", mat-flat-button, color="primary", (click)="add()")
         mat-icon add
         span.fp-list__btn-label new freepeepee
       button(mat-icon-button, (click)="reload()", matTooltip="refresh")
@@ -53,9 +53,9 @@
         td.fp-list__actions-cell(mat-cell, *matCellDef="let t")
           button(mat-icon-button, (click)="navigate(t)", matTooltip="get directions")
             mat-icon directions
-          button(mat-icon-button, (click)="edit(t)", matTooltip="edit")
+          button(*ngIf="isAdmin()", mat-icon-button, (click)="edit(t)", matTooltip="edit")
             mat-icon edit
-          button(mat-icon-button, color="warn", (click)="remove(t)", matTooltip="delete")
+          button(*ngIf="isAdmin()", mat-icon-button, color="warn", (click)="remove(t)", matTooltip="delete")
             mat-icon delete
 
       tr(mat-header-row, *matHeaderRowDef="cols; sticky: true")
@@ -63,7 +63,7 @@
 
     .fp-list__empty(*ngIf="rows().length === 0")
       mat-icon inbox
-      div No freepeepees found. Add one.
+      div {{ isAdmin() ? 'No freepeepees found. Add one.' : 'No freepeepees found.' }}
 
   //- Mobile card view (hidden on desktop)
   .fp-list__cards
@@ -80,12 +80,12 @@
         button(mat-stroked-button, (click)="navigate(t)")
           mat-icon directions
           | directions
-        button(mat-stroked-button, (click)="edit(t)")
+        button(*ngIf="isAdmin()", mat-stroked-button, (click)="edit(t)")
           mat-icon edit
           | edit
-        button(mat-stroked-button, color="warn", (click)="remove(t)")
+        button(*ngIf="isAdmin()", mat-stroked-button, color="warn", (click)="remove(t)")
           mat-icon delete
           | delete
     .fp-list__empty(*ngIf="rows().length === 0")
       mat-icon inbox
-      div No freepeepees found. Add one.
+      div {{ isAdmin() ? 'No freepeepees found. Add one.' : 'No freepeepees found.' }}

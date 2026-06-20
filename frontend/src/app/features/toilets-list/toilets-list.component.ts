@@ -13,6 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { debounceTime } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ToiletService } from '../../core/services/toilet.service';
+import { AuthService } from '../../core/auth/auth.service';
 import { Toilet } from '../../shared/models/toilet';
 import { ToiletFormComponent } from '../toilet-form/toilet-form.component';
 import {
@@ -36,6 +37,7 @@ export class ToiletsListComponent {
   private readonly api = inject(ToiletService);
   private readonly dialog = inject(MatDialog);
   private readonly snack = inject(MatSnackBar);
+  readonly isAdmin = inject(AuthService).isAdmin;
 
   readonly cols = ['name', 'address', 'pinCode', 'isWorking', 'toiletType', 'notes', 'actions'];
   readonly allRows = signal<Toilet[]>([]);

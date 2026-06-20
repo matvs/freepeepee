@@ -7,6 +7,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import * as L from 'leaflet';
 import { ToiletService } from '../../core/services/toilet.service';
+import { AuthService } from '../../core/auth/auth.service';
 import { Toilet } from '../../shared/models/toilet';
 import { ToiletFormComponent } from '../toilet-form/toilet-form.component';
 import {
@@ -48,6 +49,7 @@ export class ToiletsMapComponent implements AfterViewInit, OnDestroy {
   private readonly api = inject(ToiletService);
   private readonly snack = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
+  readonly isAdmin = inject(AuthService).isAdmin;
 
   private map?: L.Map;
   private layer?: L.LayerGroup;

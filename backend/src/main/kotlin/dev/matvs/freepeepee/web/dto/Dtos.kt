@@ -1,5 +1,7 @@
 package dev.matvs.freepeepee.web.dto
 
+import dev.matvs.freepeepee.domain.AuditEntry
+import dev.matvs.freepeepee.domain.AuditOperation
 import dev.matvs.freepeepee.domain.Toilet
 import dev.matvs.freepeepee.domain.ToiletType
 import jakarta.validation.constraints.*
@@ -72,4 +74,24 @@ data class LoginRequest(
     val rememberMe: Boolean = false
 )
 
-data class TokenResponse(val accessToken: String, val refreshToken: String?, val expiresAtEpoch: Long)
+data class TokenResponse(val accessToken: String, val refreshToken: String?, val expiresAtEpoch: Long, val role: String)
+
+data class AuditDto(
+    val occurredAt: OffsetDateTime,
+    val actorName: String,
+    val operation: AuditOperation,
+    val entityType: String,
+    val entityId: UUID?,
+    val fieldName: String?,
+    val oldValue: String?,
+    val newValue: String?,
+    val actorIp: String?
+) {
+    companion object {
+        fun from(e: AuditEntry) = AuditDto(
+            occurredAt = e.occurredAt, actorName = e.actorName, operation = e.operation,
+            entityType = e.entityType, entityId = e.entityId, fieldName = e.fieldName,
+            oldValue = e.oldValue, newValue = e.newValue, actorIp = e.actorIp
+        )
+    }
+}
