@@ -1,0 +1,9 @@
+# Keep the Docker build context lean and reproducible: the image builds from
+# source via the gradle base image, so local build output / caches must not leak in.
+build/
+.gradle/
+.idea/
+*.iml
+out/
+bin/
+*.log
